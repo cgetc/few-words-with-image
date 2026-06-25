@@ -20,6 +20,10 @@
             display: none;
         }
 
+        li img {
+            max-height: 300px;
+        }
+
         /* 文字全体のスタイル */
         #answer {
             margin: 20px 0;
@@ -156,6 +160,27 @@
                 textElement.appendChild(span)
             });
         }
+ 
+        function handleFiles(files) {
+            const ul = document.querySelector("ul");
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const li = document.createElement("li");
+                    const img = document.createElement("img");
+                    li.appendChild(img);
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        addImage(img);
+                    };
+                    ul.appendChild(li);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
     </script>
 </head>
 <body>
@@ -173,6 +198,7 @@
         <li><img src="https://picsum.photos/id/239/400/300" crossorigin="anonymous" onload="addImage(this)"></li>
     </ul>
     <div id="answer"></div>
+    <input type="file" accept="image/*" multiple onchange="handleFiles(this.files)">
     <button id="nextButton" onclick="next()" disabled>次へ</button>
 </body>
 </html>
