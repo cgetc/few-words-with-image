@@ -184,6 +184,9 @@
     </script>
 </head>
 <body>
+    <input type="file" accept="image/*" multiple onchange="handleFiles(this.files)">
+    <button id="nextButton" onclick="next()" disabled>次へ</button>
+    <hr>
     <h1>写真で一言</h1>
     <ul>
         <li><img src="https://picsum.photos/id/230/400/300" crossorigin="anonymous" onload="addImage(this)"></li>
@@ -198,7 +201,5 @@
         <li><img src="https://picsum.photos/id/239/400/300" crossorigin="anonymous" onload="addImage(this)"></li>
     </ul>
     <div id="answer"></div>
-    <input type="file" accept="image/*" multiple onchange="handleFiles(this.files)">
-    <button id="nextButton" onclick="next()" disabled>次へ</button>
 </body>
 </html>
