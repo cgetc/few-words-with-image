@@ -4,33 +4,57 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 20px;
+            background-color: #000;
         }
+
+        .controls {
+            text-align: center;
+            margin: 20px auto;
+            max-width: 500px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: rgb(250, 220, 74);
+            padding-top: 20px;
+        }
+
         h1 {
-            color: #333;
+            color: #000;
+            text-align: center;
+            margin: 0 auto 20px;
         }
         ul {
             list-style-type: none;
             padding: 0;
-            height: 300px;
+            height: 500px;
         }
         li {
-            margin: 10px 0;
             display: none;
+            justify-content: center; /* 左右の中央寄せ */
+            align-items: center; 
         }
 
         li img {
-            max-height: 300px;
+            max-width: 500px;
+            max-height: 500px;
         }
 
         /* 文字全体のスタイル */
         #answer {
-            margin: 20px 0;
             font-size: 24px;
             font-weight: bold;
             line-height: 1.5;
             height: 1.5em; /* 文字が重ならないように高さを確保 */
+            background-color: #000;
+            border-radius: 1em 0 0 0;
+            padding: 1em .5em;
+            color: #fff;
+        }
+        .wrapper {
+            background-color: #fff;
+            padding-top: 5px;
         }
 
         /* JavaScriptで分解された一文字ずつのスタイル */
@@ -43,7 +67,7 @@
             animation: fadeInText 0.5s ease-out forwards;
             
             /* 文字自体の色（グラデーションにする場合の設定） */
-            background: #ff7e5f /*linear-gradient(90deg, #ff7e5f, #feb47b)*/;
+            background: rgb(250, 220, 74);
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -137,7 +161,7 @@
             }
 
             $current = $img.parentElement
-            $current.style.display = 'block'
+            $current.style.display = 'flex'
         }
 
         function gradientText(textContent) {
@@ -186,7 +210,7 @@
             const ul = document.querySelector("ul")
             for (let i = 0; i < 10; i++) {
                 const randomId = Math.floor(Math.random() * 1000)
-                const url = `https://picsum.photos/id/${randomId}/400/300`
+                const url = `https://picsum.photos/id/${randomId}/500`
                 const li = createImageNode(url)
                 ul.appendChild(li)
             }
@@ -206,13 +230,18 @@
     </script>
 </head>
 <body>
-    <input type="button" value="ランダム画像を読み込む" onclick="loadRandomImages()">
-    <input type="file" accept="image/*" multiple onchange="handleFiles(this)">
-    <button id="nextButton" onclick="next()" disabled>次へ</button>
-    <hr>
-    <h1>写真で一言</h1>
-    <ul>
-    </ul>
-    <div id="answer"></div>
+    <div class="controls">
+        <input type="button" value="ランダム画像を読み込む" onclick="loadRandomImages()">
+        <input type="file" accept="image/*" multiple onchange="handleFiles(this)">
+        <button id="nextButton" onclick="next()" disabled>次へ</button>
+    </div>
+    <div class="container">
+        <h1>写真で一言</h1>
+        <ul>
+        </ul>
+        <div class="wrapper">
+            <div id="answer"></div>
+        </div>
+    </div>
 </body>
 </html>
