@@ -20,6 +20,10 @@
             display: none;
         }
 
+        li img {
+            max-height: 300px;
+        }
+
         /* 文字全体のスタイル */
         #answer {
             margin: 20px 0;
@@ -156,23 +160,59 @@
                 textElement.appendChild(span)
             });
         }
+ 
+        function handleFiles($input) {
+            const ul = document.querySelector("ul");
+            const files = $input.files;
+            let left = files.length;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const li = createImageNode(e.target.result);
+                    ul.appendChild(li);
+                    left--;
+                    if (left === 0) {
+                        $input.value = '';
+                    }
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function loadRandomImages() {
+            const ul = document.querySelector("ul")
+            for (let i = 0; i < 10; i++) {
+                const randomId = Math.floor(Math.random() * 1000)
+                const url = `https://picsum.photos/id/${randomId}/400/300`
+                const li = createImageNode(url)
+                ul.appendChild(li)
+            }
+        }
+
+        function createImageNode(url) {
+            const li = document.createElement("li")
+            const img = document.createElement("img")
+            li.appendChild(img);
+            img.crossOrigin = 'anonymous'
+            img.onload = function() {
+                addImage(img)
+            }
+            img.src = url
+            return li
+        }
     </script>
 </head>
 <body>
+    <input type="button" value="ランダム画像を読み込む" onclick="loadRandomImages()">
+    <input type="file" accept="image/*" multiple onchange="handleFiles(this)">
+    <button id="nextButton" onclick="next()" disabled>次へ</button>
+    <hr>
     <h1>写真で一言</h1>
     <ul>
-        <li><img src="https://picsum.photos/id/230/400/300" crossorigin="anonymous" onload="addImage(this)"></li>
-        <li><img src="https://picsum.photos/id/231/400/300" crossorigin="anonymous" onload="addImage(this)"></li>
-        <li><img src="https://picsum.photos/id/232/400/300" crossorigin="anonymous" onload="addImage(this)"></li>
-        <li><img src="https://picsum.photos/id/233/400/300" crossorigin="anonymous" onload="addImage(this)"></li>
-        <li><img src="https://picsum.photos/id/234/400/300" crossorigin="anonymous" onload="addImage(this)"></li>
-        <li><img src="https://picsum.photos/id/235/400/300" crossorigin="anonymous" onload="addImage(this)"></li>
-        <li><img src="https://picsum.photos/id/236/400/300" crossorigin="anonymous" onload="addImage(this)"></li>
-        <li><img src="https://picsum.photos/id/237/400/300" crossorigin="anonymous" onload="addImage(this)"></li>
-        <li><img src="https://picsum.photos/id/238/400/300" crossorigin="anonymous" onload="addImage(this)"></li>
-        <li><img src="https://picsum.photos/id/239/400/300" crossorigin="anonymous" onload="addImage(this)"></li>
     </ul>
     <div id="answer"></div>
-    <button id="nextButton" onclick="next()" disabled>次へ</button>
 </body>
 </html>
