@@ -196,11 +196,11 @@
             const li = document.createElement("li")
             const img = document.createElement("img")
             li.appendChild(img);
-            img.src = url
             img.crossOrigin = 'anonymous'
             img.onload = function() {
                 addImage(img)
             }
+            img.src = url
             return li
         }
     </script>
