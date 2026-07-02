@@ -8,32 +8,39 @@
         }
 
         .controls {
-            text-align: center;
+            display: flex;
+            justify-content: center;
             margin: 20px auto;
-            max-width: 500px;
+
+            details {
+                margin-top: 10px;
+                color: #fff;
+            }
         }
 
         .container {
             max-width: 500px;
             margin: 0 auto;
-            background-color: rgb(250, 220, 74);
-            padding-top: 20px;
+            background-color: #fff;
         }
 
         h1 {
             color: #000;
             text-align: center;
-            margin: 0 auto 20px;
+            margin: auto;
+            padding: 20px 0;
+            background-color: rgb(250, 220, 74);
         }
         ul {
             list-style-type: none;
+            margin: auto;
             padding: 0;
             height: 500px;
+            border-bottom: 5px solid #fff;
         }
         li {
             display: none;
             justify-content: center; /* 左右の中央寄せ */
-            align-items: center; 
         }
 
         li img {
@@ -51,10 +58,6 @@
             border-radius: 1em 0 0 0;
             padding: 1em .5em;
             color: #fff;
-        }
-        .wrapper {
-            background-color: #fff;
-            padding-top: 5px;
         }
 
         /* JavaScriptで分解された一文字ずつのスタイル */
@@ -253,17 +256,28 @@
 </head>
 <body>
     <div class="controls">
-        <input type="button" value="ランダム画像を読み込む" onclick="loadRandomImages()">
-        <input type="file" accept="image/*" multiple onchange="handleFiles(this)">
-        <button id="nextButton" onclick="next()" disabled>次へ</button>
+        <div>
+            <input type="button" value="ランダム画像を読み込む" onclick="loadRandomImages()">
+            <input type="file" accept="image/*" multiple onchange="handleFiles(this)">
+            <details>
+                <summary>説明</summary>
+                <p>
+                    読み込まれた画像を対象として、AIが写真に合った一言を生成します。<br>
+                    「次へ」ボタンを押すと、ランダムに選ばれた画像に対して一言が生成されます。<br>
+                    「ランダム画像を読み込む」ボタンでランダムな画像を10枚読み込みます。<br>
+                    「ファイルを選択」ボタンで端末内の画像を複数選択して読み込むこともできます。
+                </p>
+            </details>
+        </div>
+        <div>
+            <button id="nextButton" onclick="next()" disabled>次へ</button>
+        </div>
     </div>
     <div class="container">
         <h1>写真で一言</h1>
         <ul>
         </ul>
-        <div class="wrapper">
-            <div id="answer"></div>
-        </div>
+        <div id="answer"></div>
     </div>
 </body>
 </html>
