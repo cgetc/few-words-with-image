@@ -121,7 +121,7 @@
             ],
             expectedInputs: [{ type: 'text', languages: ['ja'] }, { type: 'image' }],
             expectedOutputs: [{ type: 'text', languages: ['ja'] }],
-        }
+        };
 
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
         const languageModelReady = LanguageModel.create({
@@ -136,7 +136,7 @@
                     }
                 });
             },
-        })
+        });
 
         window.startSession = async ($img, msec = 2000) => {
             await languageModelReady
