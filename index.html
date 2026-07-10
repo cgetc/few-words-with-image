@@ -115,37 +115,44 @@
 
         それでは、提示する写真に対する「最高の一言」をどうぞ。
         `.replace(/\s*/g, '');
-        const createLanguageModel = () => LanguageModel.create({
-            monitor: (m) => {
-                m.addEventListener('downloadprogress', (e) => {
-                    if (e.loaded === 1) {
-                        document.getElementById('answer').textContent = ''
-                    } else {
-                        document.getElementById('answer').textContent = `Loading ${e.loaded * 100}%`
-                    }
-                });
-            },
-            initialPrompts: [
-                { role: 'system', content: initailPrompt },
-            ],
-            expectedInputs: [{ type: 'text', languages: ['ja'] }, { type: 'image' }],
-            expectedOutputs: [{ type: 'text', languages: ['ja'] }],
-        })
+        async function createLanguageModel() {
+            return await LanguageModel.create({
+                monitor: (m) => {
+                    m.addEventListener('downloadprogress', (e) => {
+                        if (e.loaded === 1) {
+                            document.getElementById('answer').textContent = ''
+                        } else {
+                            document.getElementById('answer').textContent = `Loading ${e.loaded * 100}%`
+                        }
+                    });
+                },
+                initialPrompts: [
+                    { role: 'system', content: initailPrompt },
+                ],
+                expectedInputs: [{ type: 'text', languages: ['ja'] }, { type: 'image' }],
+                expectedOutputs: [{ type: 'text', languages: ['ja'] }],
+            })
+        }
 
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
         window.startSession = async ($img, msec = 2000) => {
-            const languageModel = await createLanguageModel()
-            const request = languageModel.prompt([
-                {
-                    role: 'user',
-                    content: [
-                        { type: 'image', value: $img }
-                    ],
-                },
-            ])
-            const [response, _] = await Promise.all([request, sleep(msec)])
-            return response
+            try {
+                const languageModel = await createLanguageModel()
+                const request = languageModel.prompt([
+                    {
+                        role: 'user',
+                        content: [
+                            { type: 'image', value: $img }
+                        ],
+                    },
+                ])
+                const [response, _] = await Promise.all([request, sleep(msec)])
+                return response
+            } catch (error) {
+                console.error(error)
+                return 'モデルの初期化に失敗しました'
+            }
         }
     </script>
     <script>
