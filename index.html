@@ -85,7 +85,7 @@
         }
     </style>
     <script type="module">
-        const initailPrompt = `
+        const initialPrompt = `
         ユーザーはこれからあなた（AI）に「1枚の写真」を提示します。
         あなたは「誰も傷つけないが、画面の外への想像力がぶっ飛んでいて最高に面白い」プロの大喜利芸人として、その写真に対する最高にユーモアのある「写真で一言」のボケを「1つだけ」考えてください。
 
@@ -127,7 +127,7 @@
                     });
                 },
                 initialPrompts: [
-                    { role: 'system', content: initailPrompt },
+                    { role: 'system', content: initialPrompt },
                 ],
                 expectedInputs: [{ type: 'text', languages: ['ja'] }, { type: 'image' }],
                 expectedOutputs: [{ type: 'text', languages: ['ja'] }],
