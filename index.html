@@ -85,7 +85,7 @@
         }
     </style>
     <script type="module">
-        const initailPrompt = `
+        const initialPrompt = `
         ユーザーはこれからあなた（AI）に「1枚の写真」を提示します。
         あなたは「誰も傷つけないが、画面の外への想像力がぶっ飛んでいて最高に面白い」プロの大喜利芸人として、その写真に対する最高にユーモアのある「写真で一言」のボケを「1つだけ」考えてください。
 
@@ -115,7 +115,17 @@
 
         それでは、提示する写真に対する「最高の一言」をどうぞ。
         `.replace(/\s*/g, '');
-        const languageModel = await LanguageModel.create({
+        const languageModelOptions = {
+            initialPrompts: [
+                { role: 'system', content: initialPrompt },
+            ],
+            expectedInputs: [{ type: 'text', languages: ['ja'] }, { type: 'image' }],
+            expectedOutputs: [{ type: 'text', languages: ['ja'] }],
+        };
+
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+        const languageModelReady = LanguageModel.create({
+            ...languageModelOptions,
             monitor: (m) => {
                 m.addEventListener('downloadprogress', (e) => {
                     if (e.loaded === 1) {
@@ -126,27 +136,27 @@
                     }
                 });
             },
-            initialPrompts: [
-                { role: 'system', content: initailPrompt },
-            ],
-            expectedInputs: [{ type: 'text', languages: ['ja'] }, { type: 'image' }],
-            expectedOutputs: [{ type: 'text', languages: ['ja'] }],
-        })
-
-        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+        });
 
         window.startSession = async ($img, msec = 2000) => {
-            const session = await languageModel.clone()
-            const request = session.prompt([
-                {
-                    role: 'user',
-                    content: [
-                        { type: 'image', value: $img }
-                    ],
-                },
-            ])
-            const [response, _] = await Promise.all([request, sleep(msec)])
-            return response
+            await languageModelReady
+            const session = await LanguageModel.create(languageModelOptions)
+            try {
+                const request = session.prompt([
+                    {
+                        role: 'user',
+                        content: [
+                            { type: 'image', value: $img }
+                        ],
+                    },
+                ])
+                const [response, _] = await Promise.all([request, sleep(msec)])
+                return response
+            } finally {
+                if (typeof session.destroy === 'function') {
+                    session.destroy()
+                }
+            }
         }
     </script>
     <script>
