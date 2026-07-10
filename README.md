@@ -1,3 +1,3 @@
-# few-words-with-image
+# one-liner-for-the-photo
 
-GitHub Pages: https://cgetc.github.io/few-words-with-image/
+GitHub Pages: https://cgetc.github.io/one-liner-for-the-photo/
