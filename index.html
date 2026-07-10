@@ -115,7 +115,7 @@
 
         それでは、提示する写真に対する「最高の一言」をどうぞ。
         `.replace(/\s*/g, '');
-        const languageModel = await LanguageModel.create({
+        const createLanguageModel = () => LanguageModel.create({
             monitor: (m) => {
                 m.addEventListener('downloadprogress', (e) => {
                     if (e.loaded === 1) {
@@ -133,11 +133,13 @@
             expectedOutputs: [{ type: 'text', languages: ['ja'] }],
         })
 
+        await createLanguageModel()
+
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
         window.startSession = async ($img, msec = 2000) => {
-            const session = await languageModel.clone()
-            const request = session.prompt([
+            const languageModel = await createLanguageModel()
+            const request = languageModel.prompt([
                 {
                     role: 'user',
                     content: [
