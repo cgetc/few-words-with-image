@@ -115,38 +115,51 @@
 
         それでは、提示する写真に対する「最高の一言」をどうぞ。
         `.replace(/\s*/g, '');
-        const languageModel = await LanguageModel.create({
-            monitor: (m) => {
-                m.addEventListener('downloadprogress', (e) => {
-                    if (e.loaded === 1) {
-                        document.getElementById('answer').textContent = ''
-                        document.getElementById('nextButton').disabled = false
-                    } else {
-                        document.getElementById('answer').textContent = `Loading ${e.loaded * 100}%`
-                    }
-                });
-            },
+        const languageModelOptions = {
             initialPrompts: [
                 { role: 'system', content: initailPrompt },
             ],
             expectedInputs: [{ type: 'text', languages: ['ja'] }, { type: 'image' }],
             expectedOutputs: [{ type: 'text', languages: ['ja'] }],
-        })
+        }
+
+        const warmupLanguageModel = async () => {
+            const session = await LanguageModel.create({
+                ...languageModelOptions,
+                monitor: (m) => {
+                    m.addEventListener('downloadprogress', (e) => {
+                        if (e.loaded === 1) {
+                            document.getElementById('answer').textContent = ''
+                            document.getElementById('nextButton').disabled = false
+                        } else {
+                            document.getElementById('answer').textContent = `Loading ${e.loaded * 100}%`
+                        }
+                    });
+                },
+            })
+            session.destroy?.()
+        }
 
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+        const languageModelReady = warmupLanguageModel()
 
         window.startSession = async ($img, msec = 2000) => {
-            const session = await languageModel.clone()
-            const request = session.prompt([
-                {
-                    role: 'user',
-                    content: [
-                        { type: 'image', value: $img }
-                    ],
-                },
-            ])
-            const [response, _] = await Promise.all([request, sleep(msec)])
-            return response
+            await languageModelReady
+            const session = await LanguageModel.create(languageModelOptions)
+            try {
+                const request = session.prompt([
+                    {
+                        role: 'user',
+                        content: [
+                            { type: 'image', value: $img }
+                        ],
+                    },
+                ])
+                const [response, _] = await Promise.all([request, sleep(msec)])
+                return response
+            } finally {
+                session.destroy?.()
+            }
         }
     </script>
     <script>
