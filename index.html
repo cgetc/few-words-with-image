@@ -123,7 +123,7 @@
             expectedOutputs: [{ type: 'text', languages: ['ja'] }],
         };
 
-        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
         const languageModelReady = LanguageModel.create({
             ...languageModelOptions,
             monitor: (m) => {
