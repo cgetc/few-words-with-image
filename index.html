@@ -85,7 +85,7 @@
         }
     </style>
     <script type="module">
-        const initailPrompt = `
+        const initialPrompt = `
         ユーザーはこれからあなた（AI）に「1枚の写真」を提示します。
         あなたは「誰も傷つけないが、画面の外への想像力がぶっ飛んでいて最高に面白い」プロの大喜利芸人として、その写真に対する最高にユーモアのある「写真で一言」のボケを「1つだけ」考えてください。
 
@@ -117,31 +117,26 @@
         `.replace(/\s*/g, '');
         const languageModelOptions = {
             initialPrompts: [
-                { role: 'system', content: initailPrompt },
+                { role: 'system', content: initialPrompt },
             ],
             expectedInputs: [{ type: 'text', languages: ['ja'] }, { type: 'image' }],
             expectedOutputs: [{ type: 'text', languages: ['ja'] }],
         }
 
-        const warmupLanguageModel = async () => {
-            const session = await LanguageModel.create({
-                ...languageModelOptions,
-                monitor: (m) => {
-                    m.addEventListener('downloadprogress', (e) => {
-                        if (e.loaded === 1) {
-                            document.getElementById('answer').textContent = ''
-                            document.getElementById('nextButton').disabled = false
-                        } else {
-                            document.getElementById('answer').textContent = `Loading ${e.loaded * 100}%`
-                        }
-                    });
-                },
-            })
-            session.destroy?.()
-        }
-
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
-        const languageModelReady = warmupLanguageModel()
+        const languageModelReady = LanguageModel.create({
+            ...languageModelOptions,
+            monitor: (m) => {
+                m.addEventListener('downloadprogress', (e) => {
+                    if (e.loaded === 1) {
+                        document.getElementById('answer').textContent = ''
+                        document.getElementById('nextButton').disabled = false
+                    } else {
+                        document.getElementById('answer').textContent = `Loading ${e.loaded * 100}%`
+                    }
+                });
+            },
+        })
 
         window.startSession = async ($img, msec = 2000) => {
             await languageModelReady
