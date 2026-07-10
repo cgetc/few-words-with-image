@@ -120,7 +120,6 @@
                 m.addEventListener('downloadprogress', (e) => {
                     if (e.loaded === 1) {
                         document.getElementById('answer').textContent = ''
-                        document.getElementById('nextButton').disabled = false
                     } else {
                         document.getElementById('answer').textContent = `Loading ${e.loaded * 100}%`
                     }
@@ -132,8 +131,6 @@
             expectedInputs: [{ type: 'text', languages: ['ja'] }, { type: 'image' }],
             expectedOutputs: [{ type: 'text', languages: ['ja'] }],
         })
-
-        await createLanguageModel()
 
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -157,6 +154,7 @@
         const images = []
         function addImage($img) {
             images.push($img)
+            document.getElementById('nextButton').disabled = false
         }
 
         async function next() {
